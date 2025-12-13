@@ -14,14 +14,12 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -32,19 +30,11 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(projects.shared)
-            api(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
             implementation(libs.lifecycle.viewmodel)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.ktor.client.logging)
-
-            implementation(libs.ktorfit.lib)
-            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(projects.shared)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -63,16 +53,19 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
     buildTypes {
+        getByName("debug") {
+            buildConfigField("Boolean", "IS_DEBUG", "true")
+        }
         getByName("release") {
             isMinifyEnabled = false
+            buildConfigField("Boolean", "IS_DEBUG", "false")
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -82,4 +75,3 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-

@@ -16,10 +16,12 @@ kotlin {
     }
 
     listOf(
+        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
+            export(libs.androidx.lifecycle.viewmodel)
             baseName = "Shared"
             isStatic = true
         }
@@ -27,6 +29,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(libs.androidx.lifecycle.viewmodel)
             implementation(libs.koin.core)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
@@ -34,11 +37,13 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.ktorfit.lib)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.coroutines.core)
+            api(libs.kotlinx.coroutines.core)
+            implementation(libs.napier)
         }
 
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.napier)
         }
 
         iosMain.dependencies {
