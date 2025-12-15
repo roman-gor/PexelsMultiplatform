@@ -10,7 +10,6 @@ struct ContentView: View {
                     showContent = !showContent
                 }
             }
-
             if showContent {
                 VStack(spacing: 16) {
                     Image(systemName: "swift")

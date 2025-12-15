@@ -21,7 +21,7 @@ class HomeViewModel(
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
-
+    
     private var currentPage = 1
     private var searchJob: Job? = null
 
