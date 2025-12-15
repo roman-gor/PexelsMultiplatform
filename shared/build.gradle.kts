@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.ktorfit)
 }
 
 kotlin {
@@ -31,6 +32,8 @@ kotlin {
         commonMain.dependencies {
             api(libs.androidx.lifecycle.viewmodel)
             implementation(libs.koin.core)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
@@ -45,6 +48,8 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
             implementation(libs.napier)
             implementation(libs.androidx.room.sqlite.wrapper)
         }
@@ -80,12 +85,10 @@ dependencies {
     add("kspAndroid", libs.ktorfit.ksp)
     add("kspIosArm64", libs.ktorfit.ksp)
     add("kspIosSimulatorArm64", libs.ktorfit.ksp)
+    add("kspIosX64", libs.ktorfit.ksp)
 
-    add("kspCommonMainMetadata", libs.androidx.room.compiler) // <-- ДОБАВЛЕНА ЭТА СТРОКА
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspIosX64", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
-
-    implementation(libs.ktorfit.ksp)
 }

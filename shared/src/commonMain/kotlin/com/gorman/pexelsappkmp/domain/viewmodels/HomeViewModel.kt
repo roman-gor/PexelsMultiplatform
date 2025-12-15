@@ -21,16 +21,18 @@ class HomeViewModel(
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
-    
+
     private var currentPage = 1
     private var searchJob: Job? = null
 
     init {
+        logger("HomeViewModel Initialized")
         loadFeaturedCollections()
         onSearch()
     }
 
     fun onSearch(query: String? = null) {
+        logger("onSearch called with query: $query")
         searchJob?.cancel()
         currentPage = 1
         _uiState.update {
@@ -44,12 +46,14 @@ class HomeViewModel(
         }
 
         searchJob = viewModelScope.launch {
+            logger("Starting search coroutine for query: $query")
             runCatching {
                 val photos = if (query.isNullOrBlank()) {
                     getCuratedPhotosUseCase(page = currentPage)
                 } else {
                     getPhotosByQueryUseCase(query, page = currentPage)
                 }
+                logger("Search successful. Photos found: ${photos.size}")
                 _uiState.update {
                     it.copy(
                         photos = photos,
@@ -61,6 +65,8 @@ class HomeViewModel(
                     currentPage++
                 }
             }.onFailure { throwable ->
+                logger("Search FAILED: Type: ${throwable::class.simpleName}, Message: ${throwable.message}")
+                throwable.printStackTrace() // Помогает увидеть полный стектрейс, который может указать на конкретную строку кода
                 _uiState.update { it.copy(loadState = PhotoLoadState.Error(throwable)) }
             }
         }
@@ -68,11 +74,14 @@ class HomeViewModel(
 
     fun loadMore() {
         if (_uiState.value.loadState is PhotoLoadState.Loading || searchJob?.isActive == true) {
+            logger("loadMore skipped: already loading or search job is active.")
             return
         }
+        logger("loadMore called.")
 
         searchJob = viewModelScope.launch {
             _uiState.update { it.copy(loadState = PhotoLoadState.Loading) }
+            logger("Starting loadMore coroutine. Page: $currentPage")
             runCatching {
                 val currentQuery = _uiState.value.currentQuery
                 val newPhotos = if (currentQuery.isNullOrBlank()) {
@@ -80,6 +89,7 @@ class HomeViewModel(
                 } else {
                     getPhotosByQueryUseCase(currentQuery, page = currentPage)
                 }
+                logger("Load more successful. Found ${newPhotos.size} new photos.")
                 _uiState.update {
                     it.copy(
                         photos = it.photos + newPhotos,
@@ -90,19 +100,24 @@ class HomeViewModel(
                     currentPage++
                 }
             }.onFailure { throwable ->
+                logger("Search FAILED: Type: ${throwable::class.simpleName}, Message: ${throwable.message}")
+                throwable.printStackTrace() // Помогает увидеть полный стектрейс, который может указать на конкретную строку кода
                 _uiState.update { it.copy(loadState = PhotoLoadState.Error(throwable)) }
             }
         }
     }
 
     private fun loadFeaturedCollections() {
+        logger("loadFeaturedCollections called.")
         viewModelScope.launch {
             runCatching {
+                logger("Fetching featured collections.")
                 getFeaturedCollectionsUseCase()
             }.onSuccess { collections ->
+                logger("Featured collections loaded successfully. Count: ${collections.size}")
                 _uiState.update { it.copy(collections = collections) }
-            }.onFailure {
-                // Log error, maybe update UI to show error for collections
+            }.onFailure { throwable ->
+                logger("Failed to load featured collections: ${throwable.message}")
             }
         }
     }
@@ -116,3 +131,5 @@ class HomeViewModel(
         }
     }
 }
+
+expect fun logger(msg: String)

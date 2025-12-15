@@ -34,6 +34,7 @@ kotlin {
             implementation(libs.lifecycle.viewmodel)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation("io.coil-kt:coil-compose:2.6.0")
             implementation(projects.shared)
         }
         commonTest.dependencies {
