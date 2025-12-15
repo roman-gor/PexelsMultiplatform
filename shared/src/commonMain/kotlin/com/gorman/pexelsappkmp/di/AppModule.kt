@@ -1,5 +1,8 @@
 package com.gorman.pexelsappkmp.di
 
+import androidx.room.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import com.gorman.pexelsappkmp.data.datasource.local.AppDatabase
 import com.gorman.pexelsappkmp.data.datasource.remote.PexelsApi
 import com.gorman.pexelsappkmp.data.repository.PhotoRepositoryImpl
 import com.gorman.pexelsappkmp.domain.repository.PhotoRepository
@@ -18,7 +21,10 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.serialization.json.Json
+import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -57,4 +63,14 @@ val sharedModule = module {
     factoryOf(::GetFeaturedCollectionsUseCase)
     factoryOf(::GetPhotosByQueryUseCase)
     factoryOf(::HomeViewModel)
+    single<AppDatabase> {
+        val builder = get<RoomDatabase.Builder<AppDatabase>>()
+        builder
+            .setDriver(BundledSQLiteDriver())
+            .setQueryCoroutineContext(Dispatchers.IO)
+            .build()
+    }
+    single { get<AppDatabase>().bookmarkImageDao() }
 }
+
+expect val platformModule: Module
