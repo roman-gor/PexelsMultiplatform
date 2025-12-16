@@ -8,6 +8,9 @@
     <string name="next">Следующая</string>
     <string name="previous">Предыдущая</string>
     <string name="ResultError">Ничего не найдено</string>
+    <string name="error_404">Ошибка 404</string>
+    <string name="authorize_error">Ошибка авторизации</string>
+    <string name="data_error">Ошибка данных</string>
     <string name="NoSavedImages">Вы еще ничего не сохранили</string>
     <string name="BookmarkDelete">Удалено из избранного</string>
     <string name="BookmarkAdd">Добавлено в избранное</string>

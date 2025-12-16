@@ -18,7 +18,6 @@ class DetailsViewModel (
     private val deleteBookmarkByUrlUseCase: DeleteBookmarkByUrlUseCase,
     private val findBookmarkByIdUseCase: FindBookmarkByIdUseCase
 ) : ViewModel() {
-
     private val _bookmark = MutableStateFlow<Bookmark?>(null)
     val bookmark: StateFlow<Bookmark?> = _bookmark.asStateFlow()
 

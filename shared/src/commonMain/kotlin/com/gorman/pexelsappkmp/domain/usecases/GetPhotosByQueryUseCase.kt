@@ -6,7 +6,11 @@ import com.gorman.pexelsappkmp.domain.repository.PhotoRepository
 class GetPhotosByQueryUseCase (
     private val repository: PhotoRepository
 ) {
-    suspend operator fun invoke(query: String, page: Int): List<Photo> {
-        return repository.search(query, page)
+    suspend operator fun invoke(query: String, page: Int): Result<List<Photo>> {
+        return try {
+            Result.success(repository.search(query, page))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

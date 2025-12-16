@@ -3,7 +3,6 @@ package com.gorman.pexelsappkmp.di
 import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.gorman.pexelsappkmp.data.datasource.local.AppDatabase
-import com.gorman.pexelsappkmp.data.datasource.remote.PexelsApi
 import com.gorman.pexelsappkmp.data.datasource.remote.createPexelsApi
 import com.gorman.pexelsappkmp.data.repository.BookmarkRepositoryImpl
 import com.gorman.pexelsappkmp.data.repository.PhotoRepositoryImpl
@@ -22,18 +21,8 @@ import com.gorman.pexelsappkmp.domain.viewmodels.DetailsViewModel
 import com.gorman.pexelsappkmp.domain.viewmodels.HomeViewModel
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.header
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -41,24 +30,8 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val sharedModule = module {
-    single {
-        val engine = get<HttpClientEngine>()
-        HttpClient(engine) {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                    prettyPrint = true
-                    isLenient = true
-                })
-            }
-            install(Logging) {
-                level = LogLevel.ALL
-            }
-            defaultRequest {
-                contentType(ContentType.Application.Json)
-                header("Authorization", "Bp5on48mdl079Q514RaE3gxt7uDQUzwSyvel6G8JlbQfqWMQlPM8eldF")
-            }
-        }
+    single<HttpClient> {
+        provideHttpClient()
     }
     single {
         Ktorfit.Builder()
@@ -97,3 +70,5 @@ val viewModelsModule = module {
 }
 
 expect val platformModule: Module
+
+expect fun provideHttpClient(): HttpClient

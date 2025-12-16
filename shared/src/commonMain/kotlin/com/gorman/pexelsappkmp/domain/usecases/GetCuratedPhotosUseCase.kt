@@ -7,8 +7,12 @@ import com.gorman.pexelsappkmp.domain.viewmodels.logger
 class GetCuratedPhotosUseCase(
     private val repository: PhotoRepository
 ) {
-    suspend operator fun invoke(page: Int): List<Photo> {
+    suspend operator fun invoke(page: Int): Result<List<Photo>> {
         logger("GetCuratedPhotosUseCase: Invoked, Page: $page")
-        return repository.searchCurated(page)
+        return try {
+            Result.success(repository.searchCurated(page))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

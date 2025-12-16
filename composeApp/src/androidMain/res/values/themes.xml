@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.FitnessApp" parent="android:Theme.Material.Light.NoActionBar" />
-
+    <style name="Theme.PexelsAppKmp" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.PexelsAppKmp.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/choose</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.PexelsAppKmp</item>
+    </style>
 </resources>

@@ -30,11 +30,14 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
             implementation(libs.navigation.compose)
             implementation(libs.lifecycle.viewmodel)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation("io.coil-kt:coil-compose:2.6.0")
+            implementation("androidx.core:core-splashscreen:1.0.0")
             implementation(projects.shared)
         }
         commonTest.dependencies {

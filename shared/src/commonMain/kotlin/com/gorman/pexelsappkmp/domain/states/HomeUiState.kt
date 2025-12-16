@@ -1,6 +1,7 @@
-package com.gorman.pexelsappkmp.domain
+package com.gorman.pexelsappkmp.domain.states
 
 import com.gorman.pexelsappkmp.domain.models.Collection
+import com.gorman.pexelsappkmp.domain.models.ErrorID
 import com.gorman.pexelsappkmp.domain.models.Photo
 
 data class HomeUiState(
@@ -15,5 +16,5 @@ data class HomeUiState(
 sealed interface PhotoLoadState {
     object Idle : PhotoLoadState
     object Loading : PhotoLoadState
-    data class Error(val error: Throwable) : PhotoLoadState
+    data class Error(val error: Throwable, val errorId: ErrorID) : PhotoLoadState
 }
