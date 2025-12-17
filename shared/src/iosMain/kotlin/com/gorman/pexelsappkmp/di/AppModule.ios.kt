@@ -1,5 +1,6 @@
 package com.gorman.pexelsappkmp.di
 
+import com.gorman.pexelsappkmp.BuildKonfig
 import com.gorman.pexelsappkmp.data.datasource.local.getDatabaseBuilder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
@@ -10,6 +11,8 @@ import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
+
+val pexelsKey = BuildKonfig.API_KEY
 
 actual val platformModule = module {
     single { getDatabaseBuilder() }
@@ -32,6 +35,6 @@ actual fun provideHttpClient(): HttpClient =
         }
 
         defaultRequest {
-            header("Authorization", "Bp5on48mdl079Q514RaE3gxt7uDQUzwSyvel6G8JlbQfqWMQlPM8eldF")
+            header("Authorization", pexelsKey)
         }
     }

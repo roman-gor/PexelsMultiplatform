@@ -22,4 +22,6 @@ interface BookmarksImageDao {
     suspend fun findById(imageId: Int): BookmarkImage?
     @Delete
     suspend fun delete(image: BookmarkImage)
+    @Query("SELECT * FROM bookmarks_images")
+    suspend fun getAllImages(): List<BookmarkImage>
 }

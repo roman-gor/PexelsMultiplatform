@@ -11,7 +11,7 @@ fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
     val dbFilePath = documentDirectory() + "/bookmarks.db"
     return Room.databaseBuilder<AppDatabase>(
         name = dbFilePath,
-    )
+    ).fallbackToDestructiveMigration(false)
 }
 
 @OptIn(ExperimentalForeignApi::class)

@@ -10,6 +10,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             sharedModule,
             platformModule,
             useCasesModule,
-            viewModelsModule)
+            viewModelsModule,
+            loggerModule)
     }
 }

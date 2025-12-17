@@ -3,6 +3,7 @@ package com.gorman.pexelsappkmp.domain.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gorman.pexelsappkmp.domain.models.Bookmark
+import com.gorman.pexelsappkmp.domain.states.DetailsUiState
 import com.gorman.pexelsappkmp.domain.usecases.AddBookmarkUseCase
 import com.gorman.pexelsappkmp.domain.usecases.DeleteBookmarkByUrlUseCase
 import com.gorman.pexelsappkmp.domain.usecases.FindBookmarkByIdUseCase
@@ -21,9 +22,13 @@ class DetailsViewModel (
     private val _bookmark = MutableStateFlow<Bookmark?>(null)
     val bookmark: StateFlow<Bookmark?> = _bookmark.asStateFlow()
 
+    private val _uiState = MutableStateFlow<DetailsUiState>(DetailsUiState.Idle)
+    val uiState = _uiState.asStateFlow()
+
     fun addBookmark(imageUrl: String, name: String) {
         viewModelScope.launch {
             addBookmarkUseCase(imageUrl, name)
+            _uiState.value = DetailsUiState.Success(true)
         }
     }
 
@@ -33,16 +38,16 @@ class DetailsViewModel (
         }
     }
 
-    fun searchInDBOnce(url: String, onResult: (Boolean) -> Unit) {
+    fun searchInDBOnce(url: String) {
         viewModelScope.launch {
-            val result = searchInDBOnceUseCase(url)
-            onResult(result)
+            _uiState.value = DetailsUiState.Success(searchInDBOnceUseCase(url))
         }
     }
 
     fun deleteByUrl(url: String) {
         viewModelScope.launch {
             deleteBookmarkByUrlUseCase(url)
+            _uiState.value = DetailsUiState.Success(false)
         }
     }
 }

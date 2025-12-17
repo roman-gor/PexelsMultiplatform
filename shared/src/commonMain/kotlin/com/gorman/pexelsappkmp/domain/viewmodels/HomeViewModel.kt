@@ -8,6 +8,7 @@ import com.gorman.pexelsappkmp.domain.models.ErrorID
 import com.gorman.pexelsappkmp.domain.usecases.GetCuratedPhotosUseCase
 import com.gorman.pexelsappkmp.domain.usecases.GetFeaturedCollectionsUseCase
 import com.gorman.pexelsappkmp.domain.usecases.GetPhotosByQueryUseCase
+import com.gorman.pexelsappkmp.logger.AppLogger
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ServerResponseException
@@ -22,7 +23,8 @@ import kotlinx.serialization.SerializationException
 class HomeViewModel(
     private val getCuratedPhotosUseCase: GetCuratedPhotosUseCase,
     private val getFeaturedCollectionsUseCase: GetFeaturedCollectionsUseCase,
-    private val getPhotosByQueryUseCase: GetPhotosByQueryUseCase
+    private val getPhotosByQueryUseCase: GetPhotosByQueryUseCase,
+    private val logger: AppLogger
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -32,13 +34,13 @@ class HomeViewModel(
     private var searchJob: Job? = null
 
     init {
-        logger("HomeViewModel Initialized")
+        logger.d("HomeViewModel","HomeViewModel Initialized")
         loadFeaturedCollections()
         onSearch()
     }
 
     fun onSearch(query: String? = null) {
-        logger("onSearch called with query: $query")
+        logger.d("HomeViewModel","onSearch called with query: $query")
         searchJob?.cancel()
         currentPage = 1
         _uiState.update {
@@ -51,7 +53,7 @@ class HomeViewModel(
             )
         }
         searchJob = viewModelScope.launch {
-            logger("Starting search coroutine for query: $query")
+            logger.d("HomeViewModel","Starting search coroutine for query: $query")
             runCatching {
                 val photosResult = if (query.isNullOrBlank()) {
                     getCuratedPhotosUseCase(page = currentPage)
@@ -59,7 +61,7 @@ class HomeViewModel(
                     getPhotosByQueryUseCase(query, page = currentPage)
                 }
                 photosResult.onSuccess { photos ->
-                    logger("Search successful. Photos found: ${photos.size}")
+                    logger.d("HomeViewModel","Search successful. Photos found: ${photos.size}")
                     _uiState.update {
                         it.copy(
                             photos = photos,
@@ -71,7 +73,7 @@ class HomeViewModel(
                         currentPage++
                     }
                 }.onFailure { throwable ->
-                    logger("Search FAILED: Type: ${throwable::class.simpleName}, Message: ${throwable.message}")
+                    logger.e("HomeViewModel","Search FAILED: Type: ${throwable::class.simpleName}, Message: ${throwable.message}")
                     throwable.printStackTrace()
                     val error = when (throwable) {
                         is IOException -> ErrorID.NETWORK_UNAVAILABLE
@@ -96,14 +98,12 @@ class HomeViewModel(
 
     fun loadMore() {
         if (_uiState.value.loadState is PhotoLoadState.Loading || searchJob?.isActive == true) {
-            logger("loadMore skipped: already loading or search job is active.")
+            logger.d("HomeViewModel","loadMore skipped: already loading or search job is active.")
             return
         }
-        logger("loadMore called.")
-
         searchJob = viewModelScope.launch {
             _uiState.update { it.copy(loadState = PhotoLoadState.Loading) }
-            logger("Starting loadMore coroutine. Page: $currentPage")
+            logger.d("HomeViewModel","Starting loadMore coroutine. Page: $currentPage")
             runCatching {
                 val currentQuery = _uiState.value.currentQuery
                 val newPhotosResult = if (currentQuery.isNullOrBlank()) {
@@ -112,7 +112,7 @@ class HomeViewModel(
                     getPhotosByQueryUseCase(currentQuery, page = currentPage)
                 }
                 newPhotosResult.onSuccess { newPhotos->
-                    logger("Load more successful. Found ${newPhotos.size} new photos.")
+                    logger.d("HomeViewModel","Load more successful. Found ${newPhotos.size} new photos.")
                     _uiState.update {
                         it.copy(
                             photos = it.photos + newPhotos,
@@ -123,7 +123,7 @@ class HomeViewModel(
                         currentPage++
                     }
                 }.onFailure { throwable ->
-                    logger("Search FAILED: Type: ${throwable::class.simpleName}, Message: ${throwable.message}")
+                    logger.e("HomeViewModel","Search FAILED: Type: ${throwable::class.simpleName}, Message: ${throwable.message}")
                     throwable.printStackTrace()
                     val error = when (throwable) {
                         is IOException -> ErrorID.NETWORK_UNAVAILABLE
@@ -147,16 +147,16 @@ class HomeViewModel(
     }
 
     private fun loadFeaturedCollections() {
-        logger("loadFeaturedCollections called.")
+        logger.d("HomeViewModel","loadFeaturedCollections called.")
         viewModelScope.launch {
             runCatching {
-                logger("Fetching featured collections.")
+                logger.d("HomeViewModel","Fetching featured collections.")
                 getFeaturedCollectionsUseCase()
             }.onSuccess { collections ->
-                logger("Featured collections loaded successfully. Count: ${collections.size}")
+                logger.d("HomeViewModel","Featured collections loaded successfully. Count: ${collections.size}")
                 _uiState.update { it.copy(collections = collections) }
             }.onFailure { throwable ->
-                logger("Failed to load featured collections: ${throwable.message}")
+                logger.e("HomeViewModel","Failed to load featured collections: ${throwable.message}")
             }
         }
     }
@@ -170,5 +170,3 @@ class HomeViewModel(
         }
     }
 }
-
-expect fun logger(msg: String)

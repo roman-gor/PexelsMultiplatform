@@ -5,10 +5,11 @@ import com.gorman.pexelsappkmp.data.mappers.toDomain
 import com.gorman.pexelsappkmp.domain.models.Collection
 import com.gorman.pexelsappkmp.domain.models.Photo
 import com.gorman.pexelsappkmp.domain.repository.PhotoRepository
-import com.gorman.pexelsappkmp.domain.viewmodels.logger
+import com.gorman.pexelsappkmp.logger.AppLogger
 
 class PhotoRepositoryImpl(
-    private val api: PexelsApi
+    private val api: PexelsApi,
+    private val logger: AppLogger
 ): PhotoRepository {
     override suspend fun search(
         query: String,
@@ -18,7 +19,7 @@ class PhotoRepositoryImpl(
     }
 
     override suspend fun searchCurated(page: Int): List<Photo> {
-        logger("PhotoRepositoryImpl: Calling PexelsApi.searchCuratedPhotos, Page: $page")
+        logger.d("PhotoRepositoryImpl","Calling PexelsApi.searchCuratedPhotos, Page: $page")
         return api.searchCuratedPhotos(page = page).toDomain()
     }
 

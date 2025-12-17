@@ -19,6 +19,8 @@ import com.gorman.pexelsappkmp.domain.usecases.SearchInDBOnceUseCase
 import com.gorman.pexelsappkmp.domain.viewmodels.BookmarksViewModel
 import com.gorman.pexelsappkmp.domain.viewmodels.DetailsViewModel
 import com.gorman.pexelsappkmp.domain.viewmodels.HomeViewModel
+import com.gorman.pexelsappkmp.logger.AppLogger
+import com.gorman.pexelsappkmp.logger.provideAppLogger
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +28,7 @@ import kotlinx.coroutines.IO
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -64,9 +67,23 @@ val useCasesModule = module {
 }
 
 val viewModelsModule = module {
-    single { HomeViewModel(get(), get(), get()) }
-    single { DetailsViewModel(get(), get(), get(), get()) }
-    single { BookmarksViewModel(get()) }
+    viewModel { HomeViewModel(
+        get(),
+        get(),
+        get(),
+        get()) }
+    viewModel { DetailsViewModel(
+        get(),
+        get(),
+        get(),
+        get()) }
+    viewModel { BookmarksViewModel(
+        get(),
+        get()) }
+}
+
+val loggerModule = module {
+    single<AppLogger> { provideAppLogger() }
 }
 
 expect val platformModule: Module

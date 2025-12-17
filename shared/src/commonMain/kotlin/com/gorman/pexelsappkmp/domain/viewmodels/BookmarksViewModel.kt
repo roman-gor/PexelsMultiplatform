@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gorman.pexelsappkmp.domain.models.Bookmark
 import com.gorman.pexelsappkmp.domain.usecases.GetAllBookmarksUseCase
+import com.gorman.pexelsappkmp.logger.AppLogger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class BookmarksViewModel (
-    private val getAllBookmarksUseCases: GetAllBookmarksUseCase
+    private val getAllBookmarksUseCases: GetAllBookmarksUseCase,
+    private val logger: AppLogger
 ) : ViewModel() {
     private val _bookmarks = MutableStateFlow<List<Bookmark>>(emptyList())
     val bookmarks: StateFlow<List<Bookmark>> = _bookmarks.asStateFlow()
@@ -41,7 +43,7 @@ class BookmarksViewModel (
                     }
                 }
             } catch (e: Exception) {
-                //Log.e("BookmarksVM", "Ошибка при загрузке: ${e.message}", e)
+                logger.e("BookmarksVM", "Ошибка при загрузке: ${e.message}", e)
             } finally {
                 _bookmarksProgress.value = 100
             }
