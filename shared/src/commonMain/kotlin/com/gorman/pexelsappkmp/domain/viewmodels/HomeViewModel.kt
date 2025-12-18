@@ -1,6 +1,5 @@
 package com.gorman.pexelsappkmp.domain.viewmodels
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gorman.pexelsappkmp.domain.models.ErrorID
 import com.gorman.pexelsappkmp.domain.states.HomeUiState
@@ -25,7 +24,7 @@ class HomeViewModel(
     private val getFeaturedCollectionsUseCase: GetFeaturedCollectionsUseCase,
     private val getPhotosByQueryUseCase: GetPhotosByQueryUseCase,
     private val logger: AppLogger
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()

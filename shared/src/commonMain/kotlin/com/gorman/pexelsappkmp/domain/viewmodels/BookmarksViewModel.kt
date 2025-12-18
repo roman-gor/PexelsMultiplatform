@@ -1,6 +1,5 @@
 package com.gorman.pexelsappkmp.domain.viewmodels
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gorman.pexelsappkmp.domain.models.Bookmark
 import com.gorman.pexelsappkmp.domain.usecases.GetAllBookmarksUseCase
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 class BookmarksViewModel (
     private val getAllBookmarksUseCases: GetAllBookmarksUseCase,
     private val logger: AppLogger
-) : ViewModel() {
+) : BaseViewModel() {
     private val _bookmarks = MutableStateFlow<List<Bookmark>>(emptyList())
     val bookmarks: StateFlow<List<Bookmark>> = _bookmarks.asStateFlow()
 

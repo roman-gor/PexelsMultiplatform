@@ -27,6 +27,7 @@ sqlite = "2.6.2"
 buildKonfig = "0.17.1"
 sqlDelight = "2.2.1"
 dateTimeVersion = "0.7.1"
+skie = "0.10.8"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -83,3 +84,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
+skie = { id = "co.touchlab.skie", version.ref = "skie" }

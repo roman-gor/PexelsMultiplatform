@@ -1,6 +1,5 @@
 package com.gorman.pexelsappkmp.domain.viewmodels
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gorman.pexelsappkmp.domain.models.Bookmark
 import com.gorman.pexelsappkmp.domain.states.DetailsUiState
@@ -18,7 +17,7 @@ class DetailsViewModel (
     private val searchInDBOnceUseCase: SearchInDBOnceUseCase,
     private val deleteBookmarkByUrlUseCase: DeleteBookmarkByUrlUseCase,
     private val findBookmarkByIdUseCase: FindBookmarkByIdUseCase
-) : ViewModel() {
+) : BaseViewModel() {
     private val _bookmark = MutableStateFlow<Bookmark?>(null)
     val bookmark: StateFlow<Bookmark?> = _bookmark.asStateFlow()
 

@@ -8,7 +8,7 @@ fun CollectionsResponse.toDomain(): List<Collection> = collections.map { Collect
     title = it.title,
     description = it.description,
     private = it.private,
-    mediaCount = it.media_count,
-    photosCount = it.photos_count,
-    videosCount = it.videos_count)
+    mediaCount = it.mediaCount,
+    photosCount = it.photosCount,
+    videosCount = it.videosCount)
 }

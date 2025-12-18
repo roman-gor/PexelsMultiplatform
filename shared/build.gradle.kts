@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.buildKonfig)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.skie)
 }
 
 val localProperties = Properties().apply {
@@ -115,6 +116,7 @@ dependencies {
 //    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
 //    add("kspIosX64", libs.androidx.room.compiler)
 //    add("kspIosArm64", libs.androidx.room.compiler)
+    implementation(project(":shared"))
 }
 
 sqldelight {
