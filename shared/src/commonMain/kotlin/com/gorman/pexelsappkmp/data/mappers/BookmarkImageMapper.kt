@@ -4,7 +4,7 @@ import com.gorman.pexelsappkmp.data.models.BookmarkImage
 import com.gorman.pexelsappkmp.domain.models.Bookmark
 
 fun BookmarkImage.toDomain(): Bookmark = Bookmark(
-    id = id,
+    id = id.toInt(),
     imageUrl = imageUrl,
     phName = phName
 )

@@ -2,9 +2,9 @@ package com.gorman.pexelsappkmp.domain.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gorman.pexelsappkmp.domain.models.ErrorID
 import com.gorman.pexelsappkmp.domain.states.HomeUiState
 import com.gorman.pexelsappkmp.domain.states.PhotoLoadState
-import com.gorman.pexelsappkmp.domain.models.ErrorID
 import com.gorman.pexelsappkmp.domain.usecases.GetCuratedPhotosUseCase
 import com.gorman.pexelsappkmp.domain.usecases.GetFeaturedCollectionsUseCase
 import com.gorman.pexelsappkmp.domain.usecases.GetPhotosByQueryUseCase

@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.buildKonfig)
+    alias(libs.plugins.sqldelight)
 }
 
 val localProperties = Properties().apply {
@@ -47,6 +48,9 @@ kotlin {
     }
 
     sourceSets {
+        all {
+            languageSettings.optIn("kotlin.time.ExperimentalTime")
+        }
         commonMain.dependencies {
             api(libs.androidx.lifecycle.viewmodel)
             implementation(libs.koin.core)
@@ -59,21 +63,24 @@ kotlin {
             implementation(libs.ktorfit.lib)
             implementation(libs.kotlinx.serialization.json)
             api(libs.kotlinx.coroutines.core)
-            implementation(libs.napier)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.runtime)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.coroutines.extensions)
         }
 
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
-            implementation(libs.napier)
             implementation(libs.androidx.room.sqlite.wrapper)
+            implementation(libs.android.driver)
         }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.native.driver)
         }
 
         commonTest.dependencies {
@@ -109,4 +116,12 @@ dependencies {
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspIosX64", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
+}
+
+sqldelight {
+    databases {
+        create("BookmarksDatabase") {
+            packageName.set("com.gorman.pexelsappkmp.db")
+        }
+    }
 }

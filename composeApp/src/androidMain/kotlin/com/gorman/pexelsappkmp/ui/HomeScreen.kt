@@ -47,10 +47,10 @@ import com.gorman.pexelsappkmp.R
 import com.gorman.pexelsappkmp.components.ErrorState
 import com.gorman.pexelsappkmp.components.NoResults
 import com.gorman.pexelsappkmp.components.PhotoItem
-import com.gorman.pexelsappkmp.domain.states.PhotoLoadState
 import com.gorman.pexelsappkmp.domain.models.Collection
 import com.gorman.pexelsappkmp.domain.models.ErrorID
 import com.gorman.pexelsappkmp.domain.models.Photo
+import com.gorman.pexelsappkmp.domain.states.PhotoLoadState
 import com.gorman.pexelsappkmp.domain.viewmodels.HomeViewModel
 import com.gorman.pexelsappkmp.fonts.mulishFont
 

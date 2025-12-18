@@ -1,11 +1,11 @@
 package com.gorman.pexelsappkmp.di
 
-import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.gorman.pexelsappkmp.data.datasource.local.AppDatabase
+import com.gorman.pexelsappkmp.data.datasource.local.sqldelight.BookmarkImageDaoImpl
+import com.gorman.pexelsappkmp.data.datasource.local.sqldelight.BookmarksImageDao
 import com.gorman.pexelsappkmp.data.datasource.remote.createPexelsApi
 import com.gorman.pexelsappkmp.data.repository.BookmarkRepositoryImpl
 import com.gorman.pexelsappkmp.data.repository.PhotoRepositoryImpl
+import com.gorman.pexelsappkmp.db.BookmarksDatabase
 import com.gorman.pexelsappkmp.domain.repository.BookmarkRepository
 import com.gorman.pexelsappkmp.domain.repository.PhotoRepository
 import com.gorman.pexelsappkmp.domain.usecases.AddBookmarkUseCase
@@ -23,8 +23,6 @@ import com.gorman.pexelsappkmp.logger.AppLogger
 import com.gorman.pexelsappkmp.logger.provideAppLogger
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -45,14 +43,15 @@ val sharedModule = module {
     single { get<Ktorfit>().createPexelsApi() }
     singleOf(::PhotoRepositoryImpl).bind<PhotoRepository>()
     singleOf(::BookmarkRepositoryImpl).bind<BookmarkRepository>()
-    single<AppDatabase> {
-        val builder = get<RoomDatabase.Builder<AppDatabase>>()
-        builder
-            .setDriver(BundledSQLiteDriver())
-            .setQueryCoroutineContext(Dispatchers.IO)
-            .build()
-    }
-    single { get<AppDatabase>().bookmarkImageDao() }
+//    single<AppDatabase> {
+//        val builder = get<RoomDatabase.Builder<AppDatabase>>()
+//        builder
+//            .setDriver(BundledSQLiteDriver())
+//            .setQueryCoroutineContext(Dispatchers.IO)
+//            .build()
+//    }
+    single { BookmarksDatabase(get()) }
+    single<BookmarksImageDao> { BookmarkImageDaoImpl(get()) }
 }
 
 val useCasesModule = module {

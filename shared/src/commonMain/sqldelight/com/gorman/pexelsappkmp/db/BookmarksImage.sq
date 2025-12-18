@@ -1,0 +1,27 @@
+CREATE TABLE bookmarkImageEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    imageUrl TEXT NOT NULL,
+    phName TEXT NOT NULL
+);
+
+insertImage:
+INSERT OR IGNORE INTO bookmarkImageEntity(imageUrl, phName)
+VALUES (?, ?);
+
+getAll:
+SELECT * FROM bookmarkImageEntity;
+
+existsByUrl:
+SELECT EXISTS(SELECT 1 FROM bookmarkImageEntity WHERE imageUrl = :url);
+
+deleteByUrl:
+DELETE FROM bookmarkImageEntity WHERE imageUrl = :url;
+
+findById:
+SELECT * FROM bookmarkImageEntity WHERE id = :imageId LIMIT 1;
+
+deleteById:
+DELETE FROM bookmarkImageEntity WHERE id = :id;
+
+getAllImages:
+SELECT * FROM bookmarkImageEntity;

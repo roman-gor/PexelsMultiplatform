@@ -1,7 +1,8 @@
 package com.gorman.pexelsappkmp.di
 
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import com.gorman.pexelsappkmp.BuildKonfig
-import com.gorman.pexelsappkmp.data.datasource.local.getDatabaseBuilder
+import com.gorman.pexelsappkmp.db.BookmarksDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import io.ktor.client.plugins.HttpTimeout
@@ -15,7 +16,11 @@ import org.koin.dsl.module
 val pexelsKey = BuildKonfig.API_KEY
 
 actual val platformModule = module {
-    single { getDatabaseBuilder() }
+    //single { getDatabaseBuilder() }
+    single {
+        val driver = NativeSqliteDriver(BookmarksDatabase.Schema, "bookmarks.db")
+        BookmarksDatabase(driver)
+    }
 }
 
 actual fun provideHttpClient(): HttpClient =
