@@ -46,6 +46,7 @@ struct HomeScreen: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity) // ← ВАЖНО
             }
         }
+        .padding(.top, 15)
         .onAppear {
             homeViewModelHolder.viewModel.onSearch(query: nil)
         }
@@ -88,6 +89,7 @@ struct SearchBar: View {
         )
         .padding(.horizontal, 20)
         .padding(.vertical, 20)
+        .frame(height: 55)
     }
 }
 

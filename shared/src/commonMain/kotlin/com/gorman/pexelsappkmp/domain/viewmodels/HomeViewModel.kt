@@ -31,11 +31,17 @@ class HomeViewModel(
 
     private var currentPage = 1
     private var searchJob: Job? = null
+    private var collectionsJob: Job? = null
 
     init {
         logger.d("HomeViewModel","HomeViewModel Initialized")
         loadFeaturedCollections()
-        onSearch()
+        loadCuratedPhotos()
+    }
+
+    private fun loadCuratedPhotos() {
+        if (searchJob?.isActive == true) return
+        onSearch(null)
     }
 
     fun onSearch(query: String? = null) {
@@ -147,7 +153,8 @@ class HomeViewModel(
 
     private fun loadFeaturedCollections() {
         logger.d("HomeViewModel","loadFeaturedCollections called.")
-        viewModelScope.launch {
+        collectionsJob?.cancel()
+        collectionsJob = viewModelScope.launch {
             runCatching {
                 logger.d("HomeViewModel","Fetching featured collections.")
                 getFeaturedCollectionsUseCase()
@@ -159,6 +166,7 @@ class HomeViewModel(
             }
         }
     }
+
 
     fun onCollectionSelected(title: String) {
         if (title == _uiState.value.selectedCollectionTitle) {

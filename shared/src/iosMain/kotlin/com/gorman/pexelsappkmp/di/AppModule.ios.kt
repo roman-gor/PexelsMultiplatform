@@ -40,6 +40,6 @@ actual fun provideHttpClient(): HttpClient =
         }
 
         defaultRequest {
-            header("Authorization", pexelsKey)
+            header("Authorization", "Bearer $pexelsKey")
         }
     }

@@ -22,7 +22,8 @@ data class CollectionItem(
     val id: String = "",
     val title: String = "",
     val description: String? = null,
-    val private: Boolean = false,
+    @SerialName("private")
+    val isPrivate: Boolean = false,
     @SerialName("media_count")
     val mediaCount: Int = 0,
     @SerialName("photos_count")
