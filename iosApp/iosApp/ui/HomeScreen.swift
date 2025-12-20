@@ -46,7 +46,7 @@ struct HomeScreen: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity) // ← ВАЖНО
             }
         }
-        .padding(.top, 15)
+        .padding(.top, 10)
         .onAppear {
             homeViewModelHolder.viewModel.onSearch(query: nil)
         }
@@ -77,19 +77,19 @@ struct SearchBar: View {
                     text = ""
                     onSearch("")
                 } label: {
-                    Image("close_icon")
+                    Image("close_icon").foregroundColor(Color("searchHintColor"))
                 }
                 .padding(.leading, 5)
                 .padding(.trailing, 20)
             }
         }
+        .frame(height: 55)
         .background(
             RoundedRectangle(cornerRadius: 36)
                 .fill(Color("main"))
         )
         .padding(.horizontal, 20)
         .padding(.vertical, 20)
-        .frame(height: 55)
     }
 }
 
@@ -108,8 +108,10 @@ struct CollectionsRow: View {
                     )
                 }
             }
+            .frame(height: 47)
             .padding(.horizontal, 20)
         }
+        .fixedSize(horizontal: false, vertical: true)
         .frame(height: 47)
     }
 }
@@ -123,7 +125,7 @@ struct CollectionChip: View {
             onClick()
         }) {
             Text(title)
-                .fontWeight(.semibold)
+                .fontWeight(.medium)
                 .foregroundColor(selected ? .white : Color("collectionsText"))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 6)
@@ -132,6 +134,7 @@ struct CollectionChip: View {
                         .fill(selected ? Color("choose") : Color("main"))
                 )
         }
+        .frame(height: 47)
         .buttonStyle(.plain)
     }
 }
