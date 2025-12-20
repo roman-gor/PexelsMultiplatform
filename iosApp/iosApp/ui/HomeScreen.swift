@@ -4,6 +4,7 @@ import Shared
 private let koinKt = IOSKoinHelper()
 
 struct HomeScreen: View {
+    let onPhotoClick: (String, String) -> Void
     @State private var showContent = false
     @StateObject private var homeViewModelHolder = ViewModelHolder(viewModel: koinKt.getHomeViewModel)
     @State private var uiState: HomeUiState =
@@ -38,7 +39,9 @@ struct HomeScreen: View {
 
                 PhotosGrid(
                     photos: uiState.photos,
-                    onPhotoClick: { _, _ in },
+                    onPhotoClick: { url, name in
+                        onPhotoClick(url, name)
+                    },
                     onLoadMore: {
                         homeViewModelHolder.viewModel.loadMore()
                     }
@@ -46,7 +49,6 @@ struct HomeScreen: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity) // ← ВАЖНО
             }
         }
-        .padding(.top, 10)
         .onAppear {
             homeViewModelHolder.viewModel.onSearch(query: nil)
         }
@@ -89,7 +91,7 @@ struct SearchBar: View {
                 .fill(Color("main"))
         )
         .padding(.horizontal, 20)
-        .padding(.vertical, 20)
+        .padding(.top, 20)
     }
 }
 
@@ -97,6 +99,7 @@ struct CollectionsRow: View {
     let collections: [Collection]
     let selected: String?
     let onSelect: (String?) -> Void
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 15) {
@@ -108,36 +111,36 @@ struct CollectionsRow: View {
                     )
                 }
             }
-            .frame(height: 47)
             .padding(.horizontal, 20)
         }
-        .fixedSize(horizontal: false, vertical: true)
-        .frame(height: 47)
+        .frame(height: 30)
+        .padding(.vertical, 20)
     }
 }
+
 
 struct CollectionChip: View {
     let title: String
     let selected: Bool
     let onClick: () -> Void
+
     var body: some View {
-        Button(action: {
-            onClick()
-        }) {
+        Button(action: onClick) {
             Text(title)
-                .fontWeight(.medium)
+                .font(.system(size: 14))
+                .frame(height: 30)
                 .foregroundColor(selected ? .white : Color("collectionsText"))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 6)
-                .background(
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(selected ? Color("choose") : Color("main"))
-                )
         }
-        .frame(height: 47)
+        .background(
+            RoundedRectangle(cornerRadius: 36)
+                .fill(selected ? Color("choose") : Color("main"))
+        )
         .buttonStyle(.plain)
     }
 }
+
 
 struct PhotosGrid: View {
     let photos: [Photo]
@@ -161,8 +164,6 @@ struct PhotosGrid: View {
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.top, 8)
-            .padding(.bottom, 72)
         }
     }
 
