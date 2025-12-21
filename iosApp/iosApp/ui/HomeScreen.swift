@@ -162,7 +162,7 @@ struct PhotosGrid: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 10)
         }
     }
 
@@ -186,7 +186,7 @@ struct PhotoItem: View {
                     switch phase {
                     case .empty:
                         ProgressView()
-
+                            .frame(height: 300)
                     case .success(let image):
                         image
                             .resizable()
@@ -209,7 +209,7 @@ struct PhotoItem: View {
             )
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .shadow(radius: 4)
-            .padding(6)
+            .padding(3)
         }
         .buttonStyle(.plain)
     }

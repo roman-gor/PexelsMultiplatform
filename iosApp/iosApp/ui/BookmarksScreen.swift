@@ -48,7 +48,7 @@ struct BookmarksGrid: View {
     let bookmarks: [Bookmark]
     var body: some View {
         ScrollView(showsIndicators: false) {
-            HStack {
+            HStack(alignment: .top, spacing: 12) {
                 ForEach(0..<2, id: \.self) { column in
                     LazyVStack(spacing: 12) {
                         ForEach(columnBookmarks(column), id: \.id) { bookmark in
@@ -57,6 +57,8 @@ struct BookmarksGrid: View {
                     }
                 }
             }
+            .padding(.horizontal, 10)
+            .padding(.top, 10)
         }
     }
     private func columnBookmarks(_ column: Int) -> [Bookmark] {
@@ -78,7 +80,7 @@ struct BookmarkItem: View {
                         switch phase {
                         case .empty:
                             ProgressView()
-                            
+                                .frame(height: 300)
                         case .success(let image):
                             image
                                 .resizable()
@@ -101,7 +103,7 @@ struct BookmarkItem: View {
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .shadow(radius: 4)
-                .padding(6)
+                .padding(3)
             }
             .buttonStyle(.plain)
         }

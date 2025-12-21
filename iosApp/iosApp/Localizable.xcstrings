@@ -109,6 +109,7 @@
       }
     },
     "Id" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ru" : {
           "stringUnit" : {
