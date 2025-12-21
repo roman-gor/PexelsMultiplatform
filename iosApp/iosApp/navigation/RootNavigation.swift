@@ -3,16 +3,15 @@ import SwiftUI
 struct RootNavigationView: View {
     var body: some View {
         TabView {
-            HomeTab()
+            HomeScreen()
                 .tabItem {
-                    Image(.homeButtonInactive)
-                    Text("Home")
+                    Label("Home", systemImage: "house.fill")
                 }
-            BookmarksTab()
+            BookmarksScreen()
                 .tabItem {
-                    Image(.bookmarkButtonInactive)
-                    Text("Bookmarks")
+                    Label("Bookmarks", systemImage: "bookmark.fill")
                 }
         }
+        .tint(.black)
     }
 }

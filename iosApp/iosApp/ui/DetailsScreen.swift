@@ -5,8 +5,15 @@ struct DetailsScreen: View {
     let passedId: Int?
     let passedUrl: String?
     let passedName: String?
-    let onBackClick: () -> Void
     var body: some View {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Hello, world!@*/Text("Hello, world!")/*@END_MENU_TOKEN@*/
+        VStack {
+            if let url = passedUrl {
+                Text(passedUrl! + " " + passedName!)
+            } else if let id = passedId {
+                Text("Id")
+            }
+        }
+        .navigationTitle(passedName ?? String(localized: .detailsTitle))
+        .toolbar(.hidden, for: .tabBar)
     }
 }

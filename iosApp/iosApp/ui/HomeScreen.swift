@@ -4,7 +4,6 @@ import Shared
 private let koinKt = IOSKoinHelper()
 
 struct HomeScreen: View {
-    let onPhotoClick: (String, String) -> Void
     @State private var showContent = false
     @StateObject private var homeViewModelHolder = ViewModelHolder(viewModel: koinKt.getHomeViewModel)
     @State private var uiState: HomeUiState =
@@ -17,46 +16,47 @@ struct HomeScreen: View {
         noResults: false)
     @State private var searchText = ""
     var body: some View {
-        ZStack {
-            Color("colorBackground")
-                .ignoresSafeArea()
-            VStack(spacing: 0) {
-                SearchBar(
-                    text: $searchText,
-                    onSearch: { query in
-                        homeViewModelHolder.viewModel.onSearch(query: query)
-                    }
-                )
+        NavigationStack {
+            ZStack {
+                Color("colorBackground")
+                VStack(spacing: 0) {
+                    SearchBar(
+                        text: $searchText,
+                        onSearch: { query in
+                            homeViewModelHolder.viewModel.onSearch(query: query)
+                        }
+                    )
 
-                CollectionsRow(
-                    collections: uiState.collections,
-                    selected: uiState.selectedCollectionTitle,
-                    onSelect: { title in
-                        homeViewModelHolder.viewModel.onCollectionSelected(title: title!)
-                        searchText = title!
-                    }
-                )
+                    CollectionsRow(
+                        collections: uiState.collections,
+                        selected: uiState.selectedCollectionTitle,
+                        onSelect: { title in
+                            homeViewModelHolder.viewModel.onCollectionSelected(title: title!)
+                            searchText = title!
+                        }
+                    )
 
-                PhotosGrid(
-                    photos: uiState.photos,
-                    onPhotoClick: { url, name in
-                        onPhotoClick(url, name)
-                    },
-                    onLoadMore: {
-                        homeViewModelHolder.viewModel.loadMore()
-                    }
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity) // ← ВАЖНО
+                    PhotosGrid(
+                        photos: uiState.photos,
+                        onLoadMore: {
+                            homeViewModelHolder.viewModel.loadMore()
+                        }
+                    )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity) // ← ВАЖНО
+                }
             }
-        }
-        .onAppear {
-            homeViewModelHolder.viewModel.onSearch(query: nil)
-        }
-        .task {
-            for await state in homeViewModelHolder.viewModel.uiState {
-                self.uiState = state
+            .onAppear {
+                homeViewModelHolder.viewModel.onSearch(query: nil)
             }
-            NSLog(uiState.photos.description)
+            .task {
+                for await state in homeViewModelHolder.viewModel.uiState {
+                    self.uiState = state
+                }
+                NSLog(uiState.photos.description)
+            }
+            .navigationDestination(for: AppRoute.self) { route in
+                routeView(route)
+            }
         }
     }
 }
@@ -91,7 +91,7 @@ struct SearchBar: View {
                 .fill(Color("main"))
         )
         .padding(.horizontal, 20)
-        .padding(.top, 20)
+        .padding(.top, 10)
     }
 }
 
@@ -144,7 +144,6 @@ struct CollectionChip: View {
 
 struct PhotosGrid: View {
     let photos: [Photo]
-    let onPhotoClick: (String, String) -> Void
     let onLoadMore: () -> Void
 
     var body: some View {
@@ -153,7 +152,7 @@ struct PhotosGrid: View {
                 ForEach(0..<2, id: \.self) { column in
                     LazyVStack(spacing: 12) {
                         ForEach(columnPhotos(column), id: \.id) { photo in
-                            PhotoItem(photo: photo, onPhotoClick: onPhotoClick)
+                            PhotoItem(photo: photo)
                                 .onAppear {
                                     if photo.id == photos.last?.id {
                                         onLoadMore()
@@ -176,43 +175,41 @@ struct PhotosGrid: View {
 
 struct PhotoItem: View {
     let photo: Photo
-    let onPhotoClick: (String, String) -> Void
 
     var body: some View {
-        VStack {
-            AsyncImage(url: URL(string: photo.src.medium)) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
+        let encodedUrl = photo.src.large2x.addingPercentEncoding(
+            withAllowedCharacters: .urlQueryAllowed
+        ) ?? photo.src.large2x
+        NavigationLink(value: AppRoute.detailsFromHome(url: encodedUrl, name: photo.photographer)) {
+            VStack {
+                AsyncImage(url: URL(string: photo.src.medium)) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
 
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
 
-                case .failure:
-                    Color.gray
+                    case .failure:
+                        Color.gray
 
-                @unknown default:
-                    Color.clear
+                    @unknown default:
+                        Color.clear
+                    }
                 }
+                .frame(maxWidth: .infinity)
+                .clipped()
             }
-            .frame(maxWidth: .infinity)
-            .clipped()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.systemBackground))
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .shadow(radius: 4)
+            .padding(6)
         }
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(.systemBackground))
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(radius: 4)
-        .padding(6)
-        .onTapGesture {
-            let encodedUrl = photo.src.large2x.addingPercentEncoding(
-                withAllowedCharacters: .urlQueryAllowed
-            ) ?? photo.src.large2x
-
-            onPhotoClick(encodedUrl, photo.photographer)
-        }
+        .buttonStyle(.plain)
     }
 }
