@@ -1,8 +1,50 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    ".emptyBookmarks" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You Haven’t Save Nothing Yet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вы еще ничего не сохранили"
+          }
+        }
+      }
+    },
+    ".explore" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "На главную"
+          }
+        }
+      }
+    },
     "Bookmarks" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Избранное"
+          }
+        }
+      }
     },
     "bookmarksTitle" : {
       "extractionState" : "manual",
@@ -38,11 +80,16 @@
         }
       }
     },
-    "Hello, world!" : {
-
-    },
     "Home" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Главная"
+          }
+        }
+      }
     },
     "homeTitle" : {
       "extractionState" : "manual",
@@ -62,10 +109,24 @@
       }
     },
     "Id" : {
-
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Id"
+          }
+        }
+      }
     },
     "Search" : {
-
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

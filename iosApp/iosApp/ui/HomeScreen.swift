@@ -193,7 +193,8 @@ struct PhotoItem: View {
                             .scaledToFill()
 
                     case .failure:
-                        Color.gray
+                        Image(.placeholder)
+                            .cornerRadius(16)
 
                     @unknown default:
                         Color.clear

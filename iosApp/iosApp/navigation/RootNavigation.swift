@@ -1,17 +1,19 @@
 import SwiftUI
 
 struct RootNavigationView: View {
+    @State private var selectedTab: AppTab = .home
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             HomeScreen()
                 .tabItem {
-                    Label("Home", systemImage: "house.fill")
+                    Label(.homeTitle, systemImage: "house.fill")
                 }
-            BookmarksScreen()
+                .tag(AppTab.home)
+            BookmarksScreen(selectedTab: $selectedTab)
                 .tabItem {
-                    Label("Bookmarks", systemImage: "bookmark.fill")
+                    Label(.bookmarksTitle, systemImage: "bookmark.fill")
                 }
+                .tag(AppTab.bookmarks)
         }
-        .tint(.black)
     }
 }
