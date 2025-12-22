@@ -34,6 +34,7 @@ class DetailsViewModel (
     fun findBookmarkById(imageId: Int) {
         viewModelScope.launch {
             _bookmark.value = findBookmarkByIdUseCase(imageId)
+            _uiState.value = DetailsUiState.Success(true)
         }
     }
 

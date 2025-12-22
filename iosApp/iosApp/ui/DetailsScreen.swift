@@ -67,8 +67,6 @@ struct DetailsScreen: View {
         .task {
             if let url = passedUrl { self.currentUrl = url }
             if let name = passedName { self.currentName = name }
-            
-            NSLog("\(passedId ?? 0), \(passedUrl ?? "no url"), \(passedName ?? "no name")")
             if let id = passedId {
                 detailsViewModelHolder.viewModel.findBookmarkById(imageId: Int32(id))
                 Task {
@@ -93,6 +91,7 @@ struct DetailsScreen: View {
                         }
                     }
                 }
+                NSLog("\(isBookmarked)")
             }
             Task {
                 for await state in detailsViewModelHolder.viewModel.uiState {
@@ -103,7 +102,7 @@ struct DetailsScreen: View {
                 }
             }
         }
-        .navigationTitle(passedName ?? String(localized: .detailsTitle))
+        .navigationTitle(!currentName.isEmpty ? currentName : String(localized: .detailsTitle))
         .toolbar(.hidden, for: .tabBar)
     }
 }
